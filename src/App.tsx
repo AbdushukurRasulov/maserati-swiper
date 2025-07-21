@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper/types";
@@ -24,6 +24,29 @@ function App() {
     setActiveIndex(swiper.realIndex);
   };
 
+  useEffect(() => {
+    const wrapper = document.querySelector(".swiper-wrapper");
+
+    if (!wrapper) return;
+
+    const slides = Array.from(wrapper.children) as HTMLElement[];
+
+    const firstSlide = slides[0];
+
+    if (firstSlide?.classList.contains("swiper-prev-active-animation")) {
+      const nextSlide = firstSlide.nextElementSibling as HTMLElement | null;
+      if (nextSlide) {
+        nextSlide.classList.add("isVisible");
+
+        const timeout = setTimeout(() => {
+          nextSlide.classList.remove("isVisible");
+        }, 1200);
+
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [activeIndex, direction]);
+
   return (
     <>
       <div className="h-screen"></div>
@@ -34,6 +57,7 @@ function App() {
           slidesPerView={1}
           onSlideChange={handleSlideChange}
           effect={"fade"}
+          centeredSlides
           modules={[EffectFade, Navigation]}
           navigation={{
             nextEl: ".swiper-maserati-slider-next-button",
@@ -46,10 +70,11 @@ function App() {
                 activeIndex === idx
                   ? direction === "prev"
                     ? "swiper-prev-active-animation"
-                    : "swiper-next-active-animation"
+                    : "swiper-next-active-animation "
                   : ""
-              }`}>
+              } swiper-${idx + 1}`}>
               <img src={img} className="size-full object-cover" />
+              <p className="absolute top-1/2 -translate-y-1/2 left-1/2 text-8xl text-white">{activeIndex + 1}</p>
             </SwiperSlide>
           ))}
         </Swiper>
