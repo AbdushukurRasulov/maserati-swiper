@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+.swiper-maserati-slider-prev-button,
+.swiper-maserati-slider-next-button {
+  @apply size-10 shrink-0 rounded-full bg-white flex items-center justify-center absolute top-1/2 -translate-y-1/2 cursor-pointer z-20;
+}
+
+.swiper-maserati-slider-prev-button {
+  @apply left-8;
+}
+
+.swiper-maserati-slider-next-button {
+  @apply right-8;
+}
+
+.swiper-active-animation {
+  animation: clipPath 1.35s ease-in-out;
+}
+
+@keyframes clipPath {
+  0% {
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+  }
+
+  100% {
+    clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
+  }
+}
+
+@keyframes clipPathNext {
+  0% {
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+  }
+  100% {
+    clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
+  }
+}
+
+@keyframes clipPathPrev {
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+.swiper-next-active-animation {
+  animation: clipPathNext 1.35s ease-in-out;
+}
+
+.swiper-prev-active-animation {
+  animation: clipPathPrev 1.35s ease-in-out;
+}
