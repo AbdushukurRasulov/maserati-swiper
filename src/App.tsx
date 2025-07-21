@@ -66,15 +66,14 @@ function App() {
           {imgs.map((img, idx) => (
             <SwiperSlide
               key={idx}
-              className={`${
+              className={
                 activeIndex === idx
                   ? direction === "prev"
                     ? "swiper-prev-active-animation"
                     : "swiper-next-active-animation "
                   : ""
-              } swiper-${idx + 1}`}>
+              }>
               <img src={img} className="size-full object-cover" />
-              <p className="absolute top-1/2 -translate-y-1/2 left-1/2 text-8xl text-white">{activeIndex + 1}</p>
             </SwiperSlide>
           ))}
         </Swiper>
