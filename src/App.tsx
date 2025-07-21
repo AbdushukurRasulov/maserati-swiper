@@ -27,7 +27,7 @@ function App() {
   return (
     <>
       <div className="h-screen"></div>
-      <div>
+      <div className="relative">
         <Swiper
           className="max-w-screen h-lvh w-full"
           loop={true}
