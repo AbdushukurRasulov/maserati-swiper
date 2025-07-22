@@ -2,7 +2,7 @@ import { useState } from "react";
 import Slider from "./components/Slider";
 
 function App() {
-  const [switcher, setSwitcher] = useState("interior");
+  const [switcher, setSwitcher] = useState("exterior");
   const [activeSlider, setActiveSlider] = useState<string | null>(null);
 
   const isActiveSlider = (name: string) => name === switcher;
