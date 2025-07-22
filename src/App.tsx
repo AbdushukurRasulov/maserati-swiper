@@ -1,102 +1,51 @@
-import { useEffect, useState } from "react";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import type { Swiper as SwiperType } from "swiper/types";
-
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/effect-fade";
-
-import { Navigation, EffectFade } from "swiper/modules";
-
-import img1 from "/images/exterior/appearance1.jpg";
-import img2 from "/images/exterior/appearance2.jpg";
-import img3 from "/images/exterior/appearance3.jpg";
-
-const imgs = [img1, img2, img3];
+import { useState } from "react";
+import Slider from "./components/Slider";
 
 function App() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState("next");
+  const [switcher, setSwitcher] = useState("interior");
+  const [activeSlider, setActiveSlider] = useState<string | null>(null);
 
-  const handleSlideChange = (swiper: SwiperType) => {
-    setActiveIndex(swiper.realIndex);
+  const isActiveSlider = (name: string) => name === switcher;
+
+  const hasAnimated = (name: string) => {
+    return activeSlider === name ? "animate-switch-slider" : "";
   };
 
-  useEffect(() => {
-    const wrapper = document.querySelector(".swiper-wrapper");
+  const handleSwitch = (target: string) => {
+    if (target === switcher) return;
 
-    if (!wrapper) return;
+    setSwitcher(target);
+    setActiveSlider(switcher);
 
-    const slides = Array.from(wrapper.children) as HTMLElement[];
-
-    const firstSlide = slides[0];
-
-    if (firstSlide?.classList.contains("swiper-prev-active-animation")) {
-      const nextSlide = firstSlide.nextElementSibling as HTMLElement | null;
-      if (nextSlide) {
-        nextSlide.classList.add("isVisible");
-
-        const timeout = setTimeout(() => {
-          nextSlide.classList.remove("isVisible");
-        }, 1200);
-
-        return () => clearTimeout(timeout);
-      }
-    }
-  }, [activeIndex, direction]);
+    setTimeout(() => {
+      setActiveSlider(null);
+    }, 1350);
+  };
 
   return (
-    <>
-      <div className="h-screen"></div>
-      <div className="relative">
-        <Swiper
-          className="max-w-screen h-lvh w-full"
-          loop={true}
-          slidesPerView={1}
-          onSlideChange={handleSlideChange}
-          effect={"fade"}
-          centeredSlides
-          modules={[EffectFade, Navigation]}
-          navigation={{
-            nextEl: ".swiper-maserati-slider-next-button",
-            prevEl: ".swiper-maserati-slider-prev-button"
-          }}>
-          {imgs.map((img, idx) => (
-            <SwiperSlide
-              key={idx}
-              className={
-                activeIndex === idx
-                  ? direction === "prev"
-                    ? "swiper-prev-active-animation"
-                    : "swiper-next-active-animation "
-                  : ""
-              }>
-              <img src={img} className="size-full object-cover" />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <button type="button" onClick={() => setDirection("prev")} className="swiper-maserati-slider-prev-button">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
-            <path
-              fillRule="evenodd"
-              d="M9.78 4.22a.75.75 0 0 1 0 1.06L7.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L5.47 8.53a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z"
-              clipRule="evenodd"
-            />
-          </svg>
+    <div className="relative h-lvh w-full">
+      <Slider
+        name="exterior"
+        className={`${isActiveSlider("exterior") ? "is-active" : ""} ${
+          hasAnimated("exterior") ? "animate-switch-slider" : ""
+        }`}
+      />
+      <Slider
+        name="interior"
+        className={`${isActiveSlider("interior") ? "is-active" : ""}  ${
+          hasAnimated("interior") ? "animate-switch-slider" : ""
+        }`}
+      />
+
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white flex items-center gap-4 rounded z-30 p-4">
+        <button type="button" onClick={() => handleSwitch("exterior")} className="uppercase cursor-pointer">
+          <span className={`${switcher === "exterior" && "border-b"}`}>Exterior</span>
         </button>
-        <button type="button" onClick={() => setDirection("next")} className="swiper-maserati-slider-next-button">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
-            <path
-              fillRule="evenodd"
-              d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z"
-              clipRule="evenodd"
-            />
-          </svg>
+        <button type="button" onClick={() => handleSwitch("interior")} className="uppercase cursor-pointer">
+          <span className={`${switcher === "interior" && "border-b"}`}>Interior</span>
         </button>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -43,3 +43,36 @@
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 }
+
+.exterior.animate-switch-slider,
+.interior.animate-switch-slider {
+  animation: animate-slider 1.5s ease-in-out;
+  z-index: 20;
+  visibility: visible;
+}
+
+@keyframes animate-slider {
+  0% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    opacity: 1;
+  }
+
+  99% {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    opacity: 0;
+  }
+}
+
+.exterior,
+.interior {
+  @apply invisible opacity-0 will-change-[clip-path] backface-hidden;
+}
+
+.exterior.is-active,
+.interior.is-active {
+  @apply !visible opacity-100 z-10;
+}
