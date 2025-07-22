@@ -1,23 +1,35 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Slider from "./components/Slider";
 
 function App() {
-  const [switcher, setSwitcher] = useState("exterior");
-  const [activeSlider, setActiveSlider] = useState<string | null>(null);
+  const [switcher, setSwitcher] = useState<"exterior" | "interior">("exterior");
+  const [activeSlider, setActiveSlider] = useState<"exterior" | "interior" | null>(null);
+  const [hasMounted, setHasMounted] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const isActiveSlider = (name: string) => name === switcher;
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
-  const hasAnimated = (name: string) => {
+  const isActiveSlider = (name: "exterior" | "interior") => name === switcher;
+
+  const hasAnimated = (name: "exterior" | "interior") => {
+    if (!hasMounted) return "";
     return activeSlider === name ? "animate-switch-slider" : "";
   };
 
-  const handleSwitch = (target: string) => {
+  const handleSwitch = (target: "exterior" | "interior") => {
     if (target === switcher) return;
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
 
     setSwitcher(target);
     setActiveSlider(switcher);
 
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setActiveSlider(null);
     }, 1350);
   };
@@ -26,15 +38,11 @@ function App() {
     <div className="relative h-lvh w-full">
       <Slider
         name="exterior"
-        className={`${isActiveSlider("exterior") ? "is-active" : ""} ${
-          hasAnimated("exterior") ? "animate-switch-slider" : ""
-        }`}
+        className={`${isActiveSlider("exterior") ? "is-active" : ""} ${hasAnimated("exterior")}`}
       />
       <Slider
         name="interior"
-        className={`${isActiveSlider("interior") ? "is-active" : ""}  ${
-          hasAnimated("interior") ? "animate-switch-slider" : ""
-        }`}
+        className={`${isActiveSlider("interior") ? "is-active" : ""} ${hasAnimated("interior")}`}
       />
 
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white flex items-center gap-4 rounded z-30 p-4">
